@@ -63,9 +63,10 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'sf_express_seospider.pipelines.SfExpressSeospiderPipeline': 300,
-# }
+ITEM_PIPELINES = {
+   # 'sf_express_seospider.pipelines.SfExpressSeospiderPipeline': 300,
+     'sf_express_seospider.pipelines.NodeWritePipeline': 100,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

@@ -1,4 +1,4 @@
-import pudb; pudb.set_trace()
+# import pudb; pudb.set_trace()
 import scrapy
 from scrapy.exceptions import NotSupported
 from scrapy.loader import ItemLoader
@@ -31,7 +31,5 @@ class TreeScanerSpider(scrapy.Spider):
                     yield response.follow(url, callback=self.parse)
             except ValueError:
                 pass
-            except NotSupported:
-                print('NOT SUPPORTED')
 
         yield item.load_item()
