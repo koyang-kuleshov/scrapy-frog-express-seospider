@@ -15,19 +15,10 @@ def read_params():
                             'Quick scan sitemap.xml and swow number of pages'
                             )
                         )
-    parser.add_argument(
-                        '-t'
-                        '--tree',
-                        action='store_true',
-                        help=(
-                            'Scan site for structure of pages and categories'
-                            )
-                        )
     namespace = parser.parse_args()
     params = {
         'domain': namespace.domain,
         'quick': namespace.q__quick,
-        'tree': namespace.t__tree
     }
     return params
 

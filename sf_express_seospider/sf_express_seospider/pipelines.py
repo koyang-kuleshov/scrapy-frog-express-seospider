@@ -1,22 +1,14 @@
-# import pudb; pudb.set_trace()
-from itemadapter import ItemAdapter
-
 import csv
 import os
 
 
-class SfExpressSeospiderPipeline:
+class ExpressSeoPipeline():
+    title_duplicates = set()
+    description_duplicates = set()
+    header_1_duplicates = set()
 
-    def process_item(self, item, spider):
-        return item
-
-
-class NodeWritePipeline():
-    def __init__(self,):
-        self.filename = os.path.join('output', 'output_structure.csv')
-        with open(self.filename, 'r', newline='') as csv_file:
-            self.tmp_data = csv.DictReader(csv_file).fieldnames
-
+    def __init__(self):
+        self.filename = os.path.join('output', 'output.csv')
         self.csv_file = open(self.filename, 'a', newline='', encoding='UTF-8')
 
     def __def__(self):
@@ -24,11 +16,41 @@ class NodeWritePipeline():
 
     def process_item(self, item, spider):
         writer = csv.writer(self.csv_file, delimiter=',')
-        if not self.tmp_data:
-            writer.writerow(('URL,Status,Node #1,Node #2,Node #3,Node #4,'
-                            'Node #5,Node #6,Node #7').split(','))
-            self.tmp_data = True
-        row = f'{item.get("url")},{item.get("status_code")},'
-        row = row + ','.join(item.get('nodes'))
-        writer.writerow(row.split(','))
+        row = [item.get("url"), item.get("status_code")]
+        if item.get('title') not in self.title_duplicates:
+            title = [item.get("title"), len(item.get("title")), '0']
+            self.title_duplicates.add(item.get('title'))
+        else:
+            title = [item.get("title"), len(item.get("title")), '1']
+        if item.get('description') not in self.description_duplicates:
+            description = [
+                item.get("description"),
+                len(item.get("description")),
+                '0'
+                ]
+            self.description_duplicates.add(item.get('description'))
+        else:
+            description = [
+                item.get("description"),
+                len(item.get("description")),
+                '1'
+                ]
+        head_1_len = len(item.get('header_1'))
+        if head_1_len == 1:
+            header_1 = ''.join(item.get("header_1"))
+            if header_1 not in self.header_1_duplicates:
+                self.header_1_duplicates.add(header_1)
+                header_1 = [header_1, f'{len(header_1)}', '0']
+            else:
+                header_1 = [header_1, f'{len(header_1)}', '1']
+        else:
+            header_1 = ';'.join(item.get("header_1"))
+            if header_1 not in self.header_1_duplicates:
+                self.header_1_duplicates.add(header_1)
+                header_1 = [header_1, f'{head_1_len}', '0']
+            else:
+                self.header_1_duplicates.add(header_1)
+                header_1 = [header_1, f'{head_1_len}', '1']
+        row += title + description + header_1
+        writer.writerow(row)
         return item
